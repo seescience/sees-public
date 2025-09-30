@@ -18,15 +18,15 @@ SEES Public is a Flask application used to server static pages for DOIs, docs, s
 To set up the project for development, just clone the repository and install in development mode. Pre-commit hooks need to be installed as well.
 
 ```bash
-git clone -b development https://github.com/seescience/public.git && cd public && pip install -e ".[development]" && pre-commit install
+git clone -b development https://github.com/seescience/sees-public.git && cd sees-public && pip install -e ".[development]" && pre-commit install
 ```
 
 ---
 ## Contributing
 
 All contributions to the SEES Public project are welcome! Here are some ways you can help:
-- Report a bug by opening an [issue](https://github.com/seescience/public/issues).
-- Add new features, fix bugs or improve documentation by submitting a [pull request](https://github.com/seescience/public/pulls).
+- Report a bug by opening an [issue](https://github.com/seescience/sees-public/issues).
+- Add new features, fix bugs or improve documentation by submitting a [pull request](https://github.com/seescience/sees-public/pulls).
 
 Please adhere to the [GitHub flow](https://docs.github.com/en/get-started/quickstart/github-flow) model when making your contributions! This means creating a new branch for each feature of bug fix, and submitting your changes as a pull request against the main branch. If you're not sure how to contribute, please open an issue and we'll be happy to help you out.
 
