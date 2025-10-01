@@ -15,7 +15,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from flask import Blueprint, abort, render_template, send_from_directory
+from flask import Blueprint, abort, render_template, send_from_directory, render_template_string
 
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
@@ -59,13 +59,19 @@ def list_year_data(year):
 
 
 @data_bp.route("/data/<year>/<id>")
+@data_bp.route("/data/<year>/<id>/")
 def serve_data(year, id):
-    """Serve index.html from data/year/id/ directory."""
+    """Render index.html from data/year/id/ directory as a template."""
     data_path = Path(__file__).parent.parent / "data" / year / id
     index_file = data_path / "index.html"
 
     if index_file.exists():
-        return send_from_directory(data_path, "index.html")
+        # Read the HTML file content
+        with open(index_file, "r", encoding="utf-8") as f:
+            template_content = f.read()
+
+        # Render it as a Jinja2 template
+        return render_template_string(template_content)
     else:
         abort(404)
 
