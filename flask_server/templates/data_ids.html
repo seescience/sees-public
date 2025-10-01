@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>{{ year }} Data</h1>
+{% if ids %}
+    <ul>
+    {% for id in ids %}
+        <li><a href="/data/{{ year }}/{{ id }}">{{ id }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No data available for {{ year }}.</p>
+{% endif %}
+<div class="back-link">
+    <a href="/data">← Back to all years</a>
+</div>
+{% endblock %}
