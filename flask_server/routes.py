@@ -15,10 +15,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from flask import Blueprint, abort, render_template, send_from_directory, render_template_string
+from flask import Blueprint, abort, render_template, render_template_string, send_from_directory
 
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
+
+# Base directory
+base_dir = Path("/archives/public")
 
 
 # Home route
@@ -32,7 +35,7 @@ def home():
 @data_bp.route("/data")
 def list_data():
     """List available years in data directory."""
-    data_path = Path(__file__).parent.parent / "data"
+    data_path = base_dir / "data"
     years = []
 
     if data_path.exists():
@@ -45,7 +48,7 @@ def list_data():
 @data_bp.route("/data/<year>")
 def list_year_data(year):
     """List available IDs for a specific year."""
-    data_path = Path(__file__).parent.parent / "data" / year
+    data_path = base_dir / "data" / year
     ids = []
 
     if data_path.exists():
@@ -62,7 +65,7 @@ def list_year_data(year):
 @data_bp.route("/data/<year>/<id>/")
 def serve_data(year, id):
     """Render index.html from data/year/id/ directory as a template."""
-    data_path = Path(__file__).parent.parent / "data" / year / id
+    data_path = base_dir / "data" / year / id
     index_file = data_path / "index.html"
 
     if index_file.exists():
@@ -79,7 +82,7 @@ def serve_data(year, id):
 @data_bp.route("/data/<year>/<id>/<path:filename>")
 def serve_data_files(year, id, filename):
     """Serve static files from data directories."""
-    data_path = Path(__file__).parent.parent / "data" / year / id
+    data_path = base_dir / "data" / year / id
     file_path = data_path / filename
 
     if file_path.exists() and file_path.is_file():
