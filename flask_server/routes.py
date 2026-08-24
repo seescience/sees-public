@@ -21,7 +21,7 @@ from flask import Blueprint, abort, render_template, render_template_string, sen
 data_bp = Blueprint("data", __name__)
 
 # Base directory
-base_dir = Path("/archives/public")
+base_dir = Path("/Volumes/public")
 
 
 # Home route
