@@ -16,6 +16,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from elasticsearch import Elasticsearch
 
 from flask import Flask
 
@@ -29,6 +30,8 @@ def create_flask_app() -> Flask:
     # Create the Flask app
     app = Flask(__name__)
     app.config.from_object(BaseConfig)
+
+    app.elasticsearch = Elasticsearch([app.config["ELASTICSEARCH_URL"]])
 
     # Setup logging
     if not app.debug and not app.testing:
