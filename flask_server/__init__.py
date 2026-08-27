@@ -31,7 +31,7 @@ def create_flask_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(BaseConfig)
 
-    app.elasticsearch = Elasticsearch([app.config["ELASTICSEARCH_URL"]])
+    app.elasticsearch = Elasticsearch([app.config["ELASTICSEARCH_URL"]], basic_auth=("elastic", "-eOCqTkTP2=g2VK-jIhl"), verify_certs=False)
 
     # Setup logging
     if not app.debug and not app.testing:

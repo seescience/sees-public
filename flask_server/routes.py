@@ -17,6 +17,8 @@ from pathlib import Path
 
 from flask import Blueprint, abort, render_template, render_template_string, send_from_directory
 
+from .search import reset_index, index_all_data
+
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
 
@@ -43,6 +45,17 @@ def list_data():
         years.sort(reverse=True)
 
     return render_template("data_years.html", years=years)
+
+# List all data and add it to an elasticsearch index
+@data_bp.route("/data/test")
+def list_data_indexed():
+    # Traverse base_dir/data and for each index.html file, add it to the index
+    reset_index("test")
+    data = index_all_data(base_dir / "data", "test")
+
+    # Call render_template and pass the list of all documents
+    #return render_template("data.html", data)
+    return render_template("data_ids.html", year=1970, ids=[x["id"] for x in data])
 
 
 @data_bp.route("/data/<year>")
