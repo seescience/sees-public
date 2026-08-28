@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="body">
+    <div class="table-body">
+        <table class="table">
+            <thead class="table-head">
+                <tr>
+                    <th class="column-header">ID</th>
+                    <th class="column-header">Title</th>
+                    <th class="column-header">PI</th>
+                    <th class="column-header">Year</th>
+                </tr>
+            </thead>
+            <tbody id="deviceTableBody">
+                {% for d in data %}
+                <tr class="device-row">
+                    {% if d["id"] %}
+                    <td>{{ d["id"] }}</td>
+                    <td>{{ d["title"] }}</td>
+                    <td>{{ d["author"] }}</td>
+                    <td>{{ d["year"] }}</td>
+                    {% elif d["_id"] %}
+                    <td>{{ d["_id"] }}</td>
+                    <td>{{ d["_source"]["title"] }}</td>
+                    <td>{{ d["_source"]["author"] }}</td>
+                    <td>{{ d["_source"]["year"] }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock content %}

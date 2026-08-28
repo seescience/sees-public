@@ -3,18 +3,19 @@ from bs4 import BeautifulSoup
 
 # Add all specified fields to the search index of the file located at the path
 # Returns a payload dictionary containing the following indexed fields: title, author, id
-def add_to_index(index_name, id, file_path):
+def add_to_index(index_name, id, year, file_path):
     # Parse index.html file into payload
     payload = parse_data_from_html(file_path)
     payload["id"] = id
+    payload["year"] = year
     current_app.elasticsearch.index(index=index_name, id=id, document=payload)
     return payload
 
 # Return all data ids that result from the given query
 def query_index(index, query):
-    search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}})
-    ids = [int(hit['_id']) for hit in search['hits']['hits']]
-    return ids, search['hits']['total']['value']
+    search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, size=1000)
+    hits = search['hits']['hits']
+    return hits, search['hits']['total']['value']
 
 # For the index.html file located at the specified path, retrieve the data for the search index
 # Current fields: title, author
@@ -49,7 +50,7 @@ def index_all_data(data_path, index_name):
         for d in path.iterdir():
             if d.is_dir() and (d / "index.html").exists():
                 html_path = path / d / "index.html"
-                obj = add_to_index(index_name, d.name, html_path)
+                obj = add_to_index(index_name, d.name, year, html_path)
                 data.append(obj)
 
     return data
