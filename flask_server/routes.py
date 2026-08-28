@@ -15,15 +15,20 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from flask import Blueprint, abort, render_template, render_template_string, send_from_directory
+from flask import Blueprint, abort, render_template, render_template_string, send_from_directory, g, url_for, redirect
 
-from .search import reset_index, index_all_data
+from .search import reset_index, index_all_data, query_index
+from .forms import SearchForm
 
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
 
 # Base directory
 base_dir = Path("/Volumes/public")
+
+@data_bp.before_app_request
+def before_request():
+    g.search_form = SearchForm()
 
 
 # Home route
@@ -52,11 +57,18 @@ def list_data_indexed():
     # Traverse base_dir/data and for each index.html file, add it to the index
     reset_index("test")
     data = index_all_data(base_dir / "data", "test")
-
+    data = sorted(data, key=lambda x: int(x['id']), reverse=True)
     # Call render_template and pass the list of all documents
-    #return render_template("data.html", data)
+    # return render_template("data.html", data)
     return render_template("data_ids.html", year=1970, ids=[x["id"] for x in data])
 
+# List data filtered by a search
+@data_bp.route("/data/search")
+def search():
+    if not g.search_form.validate():
+        return redirect(url_for("data.list_data_indexed"))
+    posts, total = query_index("test", g.search_form.q.data)
+    return render_template("data_ids.html", year=1970, ids=posts)
 
 @data_bp.route("/data/<year>")
 def list_year_data(year):

@@ -2,6 +2,7 @@ from flask import current_app
 from bs4 import BeautifulSoup
 
 # Add all specified fields to the search index of the file located at the path
+# Returns a payload dictionary containing the following indexed fields: title, author, id
 def add_to_index(index_name, id, file_path):
     # Parse index.html file into payload
     payload = parse_data_from_html(file_path)
@@ -25,10 +26,13 @@ def parse_data_from_html(file_path):
 
     return {"title": title, "author":author}
 
+# Reinstantiate the elasticsearch index
 def reset_index(index_name):
     current_app.elasticsearch.indices.delete(index=index_name, ignore_unavailable=True)
     current_app.elasticsearch.indices.create(index=index_name)
 
+# Traverse the data_path folder. Add all data to the ES index specified by index_name.
+# Returns a list containing all data objects represented as dicts.
 def index_all_data(data_path, index_name):
     years = []
 
