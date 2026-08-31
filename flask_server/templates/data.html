@@ -15,12 +15,12 @@
                 {% for d in data %}
                 <tr class="device-row">
                     {% if d["id"] %}
-                    <td>{{ d["id"] }}</td>
+                    <td><a href="/data/{{ d['year'] }}/{{ d['id'] }}">{{ d["id"] }}</a></td>
                     <td>{{ d["title"] }}</td>
                     <td>{{ d["author"] }}</td>
                     <td>{{ d["year"] }}</td>
                     {% elif d["_id"] %}
-                    <td>{{ d["_id"] }}</td>
+                    <td><a href="/data/{{ d['_source']['year'] }}/{{ d['_source']['id'] }}">{{ d["_source"]["id"] }}</a></td>
                     <td>{{ d["_source"]["title"] }}</td>
                     <td>{{ d["_source"]["author"] }}</td>
                     <td>{{ d["_source"]["year"] }}</td>
