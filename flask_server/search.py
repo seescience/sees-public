@@ -1,5 +1,6 @@
 from flask import current_app
 from bs4 import BeautifulSoup
+from elasticsearch import helpers
 
 # Add all specified fields to the search index of the file located at the path
 # Returns a payload dictionary containing the following indexed fields: title, author, id
@@ -27,6 +28,14 @@ def parse_data_from_html(file_path):
 
     return {"title": title, "author":author}
 
+def get_all_indexed_ids(index_name):
+    hits = helpers.scan(current_app.elasticsearch, query={"query":{"match_all": {}}}, index=index_name)
+    return [hit['_id'] for hit in hits]
+
+def get_all_docs(index_name):
+    hits = helpers.scan(current_app.elasticsearch, query={"query":{"match_all": {}}}, index=index_name)
+    return [hit["_source"] for hit in hits]
+
 # Reinstantiate the elasticsearch index
 def reset_index(index_name):
     current_app.elasticsearch.indices.delete(index=index_name, ignore_unavailable=True)
@@ -42,15 +51,13 @@ def index_all_data(data_path, index_name):
 
     years = [d.name for d in data_path.iterdir() if d.is_dir() and d.name.isdigit()]
 
-    data = []
+    prev_ids = get_all_indexed_ids(index_name)
 
     for year in years:
         path = data_path / year
 
         for d in path.iterdir():
-            if d.is_dir() and (d / "index.html").exists():
-                html_path = path / d / "index.html"
-                obj = add_to_index(index_name, d.name, year, html_path)
-                data.append(obj)
+            if d.is_dir() and (d / "index.html").exists() and d.name not in prev_ids:
+                add_to_index(index_name, d.name, year, d)
 
-    return data
+    return get_all_docs(index_name)

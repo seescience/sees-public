@@ -15,7 +15,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from flask import Blueprint, abort, render_template, render_template_string, send_from_directory, g, url_for, redirect
+from flask import Blueprint, abort, render_template, render_template_string, send_from_directory, g, url_for, redirect, current_app
 
 from .search import reset_index, index_all_data, query_index
 from .forms import SearchForm
@@ -55,7 +55,9 @@ def list_data():
 @data_bp.route("/data")
 def list_data_indexed():
     # Traverse base_dir/data and for each index.html file, add it to the index
-    reset_index("test")
+    index_name = "text"
+    if not current_app.elasticsearch.indices.exists(index=index_name):
+        reset_index(index_name)
     data = index_all_data(base_dir / "data", "test")
     data = sorted(data, key=lambda x: int(x['id']), reverse=True)
     # Call render_template and pass the list of all documents
