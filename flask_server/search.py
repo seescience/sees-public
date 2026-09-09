@@ -28,10 +28,12 @@ def parse_data_from_html(file_path):
 
     return {"title": title, "author":author}
 
+# Returns a list of ID numbers for all data in the index
 def get_all_indexed_ids(index_name):
     hits = helpers.scan(current_app.elasticsearch, query={"query":{"match_all": {}}}, index=index_name)
     return [hit['_id'] for hit in hits]
 
+# Retrieve all indexed data
 def get_all_docs(index_name):
     hits = helpers.scan(current_app.elasticsearch, query={"query":{"match_all": {}}}, index=index_name)
     return [hit["_source"] for hit in hits]
@@ -41,8 +43,9 @@ def reset_index(index_name):
     current_app.elasticsearch.indices.delete(index=index_name, ignore_unavailable=True)
     current_app.elasticsearch.indices.create(index=index_name)
 
-# Traverse the data_path folder. Add all data to the ES index specified by index_name.
-# Returns a list containing all data objects represented as dicts.
+# Traverse the data_path folder. Check if any folders are not already in the index.
+# Updates the elasticsearch index with any new data.
+# Returns a list containing all data objects in the index, represented as dicts.
 def index_all_data(data_path, index_name):
     years = []
 

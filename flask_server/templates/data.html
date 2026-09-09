@@ -2,13 +2,46 @@
 {% block content %}
 <div class="body">
     <div class="table-body">
+        <form method="get">
+            <label for="year">Filter by year:</label>
+            <select name="year" id="year" onchange="this.form.submit()">
+                <option value="">All</option>
+                {% for year in years %}
+                <option value="{{ year }}" {% if selected_year == year|string %}(selected){% endif %}>
+                    {{ year }}
+                </option>
+                {% endfor %}
+                <input type="hidden" name="sort" value="{{ sort_col }}">
+                <input type="hidden" name="order" value="{{ sort_order }}">
+            </select>
+        </form>
         <table class="table">
             <thead class="table-head">
                 <tr>
-                    <th class="column-header">ID</th>
-                    <th class="column-header">Title</th>
-                    <th class="column-header">PI</th>
-                    <th class="column-header">Year</th>
+                    {% set next_order = 'desc' if sort_col == 'id' and sort_order == 'asc' else 'asc' %}
+                    <th class="column-header">
+                        <a href="{{ url_for('data.list_data_indexed', sort='id', order=next_order, year=selected_year)}}">
+                            ID
+                        </a>
+                    </th>
+                    {% set next_order = 'desc' if sort_col == 'title' and sort_order == 'asc' else 'asc' %}
+                    <th class="column-header">
+                        <a href="{{ url_for('data.list_data_indexed', sort='title', order=next_order, year=selected_year)}}">
+                            Title
+                        </a>
+                    </th>
+                    {% set next_order = 'desc' if sort_col == 'author' and sort_order == 'asc' else 'asc' %}
+                    <th class="column-header">
+                        <a href="{{ url_for('data.list_data_indexed', sort='author', order=next_order, year=selected_year)}}">
+                            PI
+                        </a>
+                    </th>
+                    {% set next_order = 'desc' if sort_col == 'year' and sort_order == 'asc' else 'asc' %}
+                    <th class="column-header">
+                        <a href="{{ url_for('data.list_data_indexed', sort='year', order=next_order, year=selected_year)}}">
+                            Year
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody id="deviceTableBody">

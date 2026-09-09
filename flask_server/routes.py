@@ -15,7 +15,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from flask import Blueprint, abort, render_template, render_template_string, send_from_directory, g, url_for, redirect, current_app
+from flask import Blueprint, abort, request, render_template, render_template_string, send_from_directory, g, url_for, redirect, current_app
 
 from .search import reset_index, index_all_data, query_index
 from .forms import SearchForm
@@ -54,17 +54,32 @@ def list_data():
 # List all data and add it to an elasticsearch index
 @data_bp.route("/data")
 def list_data_indexed():
-    # Traverse base_dir/data and for each index.html file, add it to the index
     index_name = "text"
+    # Filter params
+    sort_col = request.args.get("sort", "id")
+    sort_order = request.args.get("order", "desc")
+    selected_year = request.args.get("year", "2026")
+    # Validation
+    if sort_col not in ["id", "title", "author", "year"]:
+        sort_col = "year"
+    # If the index doesn't already exist, create it
     if not current_app.elasticsearch.indices.exists(index=index_name):
         reset_index(index_name)
+    # Search the folder and update the index to include all data
     data = index_all_data(base_dir / "data", "test")
-    data = sorted(data, key=lambda x: int(x['id']), reverse=True)
+    # Filter by selected year
+    all_years = sorted({row["year"] for row in data}, reverse=True)
+    if selected_year:
+        data = [row for row in data if str(row["year"]) == selected_year]
+    # Sort data
+    reverse = sort_order == "desc"
+    data = sorted(data, key=lambda x: x[sort_col], reverse=reverse)
     # Call render_template and pass the list of all documents
-    return render_template("data.html", data=data)
+    return render_template("data.html", data=data, years=all_years, sort_col=sort_col, sort_order=sort_order, selected_year=selected_year)
     # return render_template("data_ids.html", year=1970, data=[x["id"] for x in data])
 
 # List data filtered by a search
+# TODO: replace this code with a request arg in the /data route
 @data_bp.route("/data/search")
 def search():
     if not g.search_form.validate():
