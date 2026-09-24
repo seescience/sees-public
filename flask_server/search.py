@@ -61,6 +61,6 @@ def index_all_data(data_path, index_name):
 
         for d in path.iterdir():
             if d.is_dir() and (d / "index.html").exists() and d.name not in prev_ids:
-                add_to_index(index_name, d.name, year, d)
+                add_to_index(index_name, d.name, year, d / "index.html")
 
     return get_all_docs(index_name)

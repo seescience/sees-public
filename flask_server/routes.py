@@ -15,7 +15,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-from flask import Blueprint, abort, request, render_template, render_template_string, send_from_directory, g, url_for, redirect, current_app
+from flask import Blueprint, abort, render_template, render_template_string, send_from_directory, g, url_for, redirect, current_app
 
 from .search import reset_index, index_all_data, query_index
 from .forms import SearchForm
@@ -23,7 +23,7 @@ from .forms import SearchForm
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
 
-# Base directory
+# Base directory (Archives)
 base_dir = Path("/Volumes/public")
 
 @data_bp.before_app_request
@@ -56,12 +56,12 @@ def list_data():
 def list_data_indexed():
     index_name = "text"
     # Filter params
-    sort_col = request.args.get("sort", "id")
-    sort_order = request.args.get("order", "desc")
-    selected_year = request.args.get("year", "2026")
+    # sort_col = request.args.get("sort", "id")
+    # sort_order = request.args.get("order", "desc")
+    # selected_year = request.args.get("year", "2026")
     # Validation
-    if sort_col not in ["id", "title", "author", "year"]:
-        sort_col = "year"
+    # if sort_col not in ["id", "title", "author", "year"]:
+        # sort_col = "year"
     # If the index doesn't already exist, create it
     if not current_app.elasticsearch.indices.exists(index=index_name):
         reset_index(index_name)
@@ -69,13 +69,14 @@ def list_data_indexed():
     data = index_all_data(base_dir / "data", "test")
     # Filter by selected year
     all_years = sorted({row["year"] for row in data}, reverse=True)
-    if selected_year:
-        data = [row for row in data if str(row["year"]) == selected_year]
+    # if selected_year:
+        # data = [row for row in data if str(row["year"]) == selected_year]
     # Sort data
-    reverse = sort_order == "desc"
-    data = sorted(data, key=lambda x: x[sort_col], reverse=reverse)
+    # reverse = sort_order == "desc"
+    # data = sorted(data, key=lambda x: x[sort_col], reverse=reverse)
     # Call render_template and pass the list of all documents
-    return render_template("data.html", data=data, years=all_years, sort_col=sort_col, sort_order=sort_order, selected_year=selected_year)
+    return render_template("data.html", data=data, years=all_years)
+    # return render_template("data.html", data=data, years=all_years, sort_col=sort_col, sort_order=sort_order, selected_year=selected_year)
     # return render_template("data_ids.html", year=1970, data=[x["id"] for x in data])
 
 # List data filtered by a search

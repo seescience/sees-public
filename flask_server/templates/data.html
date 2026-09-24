@@ -2,67 +2,35 @@
 {% block content %}
 <div class="body">
     <div class="table-body">
-        <form method="get">
-            <label for="year">Filter by year:</label>
-            <select name="year" id="year" onchange="this.form.submit()">
-                <option value="">All</option>
-                {% for year in years %}
-                <option value="{{ year }}" {% if selected_year == year|string %}(selected){% endif %}>
-                    {{ year }}
-                </option>
-                {% endfor %}
-                <input type="hidden" name="sort" value="{{ sort_col }}">
-                <input type="hidden" name="order" value="{{ sort_order }}">
-            </select>
-        </form>
-        <table class="table">
+        <label for="year">Filter by year:</label>
+        <select id="year">
+            <option value="all">All</option>
+            {% for year in years %}
+            <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
+        <table class="dataTable" id="dataTable">
             <thead class="table-head">
                 <tr>
-                    {% set next_order = 'desc' if sort_col == 'id' and sort_order == 'asc' else 'asc' %}
-                    <th class="column-header">
-                        <a href="{{ url_for('data.list_data_indexed', sort='id', order=next_order, year=selected_year)}}">
-                            ID
-                        </a>
+                    <th data-column="id">
+                        ID <span class="sort-arrow"></span>
                     </th>
-                    {% set next_order = 'desc' if sort_col == 'title' and sort_order == 'asc' else 'asc' %}
-                    <th class="column-header">
-                        <a href="{{ url_for('data.list_data_indexed', sort='title', order=next_order, year=selected_year)}}">
-                            Title
-                        </a>
+                    <th data-column="title">
+                        Title <span class="sort-arrow"></span>
                     </th>
-                    {% set next_order = 'desc' if sort_col == 'author' and sort_order == 'asc' else 'asc' %}
-                    <th class="column-header">
-                        <a href="{{ url_for('data.list_data_indexed', sort='author', order=next_order, year=selected_year)}}">
-                            PI
-                        </a>
+                    <th data-column="author">
+                        PI <span class="sort-arrow"></span>
                     </th>
-                    {% set next_order = 'desc' if sort_col == 'year' and sort_order == 'asc' else 'asc' %}
-                    <th class="column-header">
-                        <a href="{{ url_for('data.list_data_indexed', sort='year', order=next_order, year=selected_year)}}">
-                            Year
-                        </a>
+                    <th data-column="year">
+                        Year <span class="sort-arrow"></span>
                     </th>
                 </tr>
             </thead>
-            <tbody id="deviceTableBody">
-                {% for d in data %}
-                <tr class="device-row">
-                    {% if d["id"] %}
-                    <td><a href="/data/{{ d['year'] }}/{{ d['id'] }}">{{ d["id"] }}</a></td>
-                    <td>{{ d["title"] }}</td>
-                    <td>{{ d["author"] }}</td>
-                    <td>{{ d["year"] }}</td>
-                    {% elif d["_id"] %}
-                    <td><a href="/data/{{ d['_source']['year'] }}/{{ d['_source']['id'] }}">{{ d["_source"]["id"] }}</a></td>
-                    <td>{{ d["_source"]["title"] }}</td>
-                    <td>{{ d["_source"]["author"] }}</td>
-                    <td>{{ d["_source"]["year"] }}</td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
+            <tbody id="deviceTableBody"></tbody>
         </table>
     </div>
 </div>
-</div>
+<script>
+    const dataFromFlask = {{ data | tojson }};
+</script>
 {% endblock content %}
