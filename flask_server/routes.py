@@ -54,7 +54,7 @@ def list_data():
 # List all data and add it to an elasticsearch index
 @data_bp.route("/data")
 def list_data_indexed():
-    index_name = "text"
+    index_name = "test"
     # Filter params
     # sort_col = request.args.get("sort", "id")
     # sort_order = request.args.get("order", "desc")
@@ -66,7 +66,7 @@ def list_data_indexed():
     if not current_app.elasticsearch.indices.exists(index=index_name):
         reset_index(index_name)
     # Search the folder and update the index to include all data
-    data = index_all_data(base_dir / "data", "test")
+    data = index_all_data(base_dir / "data", index_name)
     # Filter by selected year
     all_years = sorted({row["year"] for row in data}, reverse=True)
     # if selected_year:
@@ -85,9 +85,13 @@ def list_data_indexed():
 def search():
     if not g.search_form.validate():
         return redirect(url_for("data.list_data_indexed"))
+    if not g.search_form.q.data:
+        return redirect(url_for("data.list_data_indexed"))
     data, total = query_index("test", g.search_form.q.data)
     data = sorted(data, key=lambda x: int(x["_score"]), reverse=True)
-    return render_template("data.html", data=data)
+    documents = [hit["_source"] for hit in data]
+    all_years = sorted({row["year"] for row in documents}, reverse=True)
+    return render_template("data.html", data=documents, years=all_years)
 
 @data_bp.route("/data/<year>")
 def list_year_data(year):

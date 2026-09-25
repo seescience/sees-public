@@ -1,11 +1,11 @@
 from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField
-from wtforms.validators import DataRequired
+from wtforms.validators import Optional
 from flask_babel import lazy_gettext as _l
 
 class SearchForm(FlaskForm):
-    q = StringField(_l('Search'), validators=[DataRequired()])
+    q = StringField(_l('Search'), validators=[Optional()])
 
     def __init__(self, *args, **kwargs):
         if 'formdata' not in kwargs:
