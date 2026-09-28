@@ -13,8 +13,11 @@ def add_to_index(index_name, id, year, file_path):
     return payload
 
 # Return all data ids that result from the given query
-def query_index(index, query):
-    search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, size=1000)
+def query_index(index, query, page, per_page):
+    if not query:
+        search = current_app.elasticsearch.search(index=index, query={"match_all": {}}, from_=(page-1)*per_page, size=per_page)
+    else:
+        search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, from_=(page-1)*per_page, size=per_page)
     hits = search['hits']['hits']
     return hits, search['hits']['total']['value']
 
@@ -46,7 +49,7 @@ def reset_index(index_name):
 # Traverse the data_path folder. Check if any folders are not already in the index.
 # Updates the elasticsearch index with any new data.
 # Returns a list containing all data objects in the index, represented as dicts.
-def index_all_data(data_path, index_name):
+def index_all_data(data_path, index_name, ids=None):
     years = []
 
     if not data_path.exists():
@@ -60,7 +63,7 @@ def index_all_data(data_path, index_name):
         path = data_path / year
 
         for d in path.iterdir():
-            if d.is_dir() and (d / "index.html").exists() and d.name not in prev_ids:
+            if d.is_dir() and (d / "index.html").exists() and d.name not in prev_ids and (d.name in ids or not ids):
                 add_to_index(index_name, d.name, year, d / "index.html")
 
-    return get_all_docs(index_name)
+    #return get_all_docs(index_name)
