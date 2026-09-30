@@ -1,20 +1,40 @@
 document.addEventListener("DOMContentLoaded", () => {
     const originalData = [...dataFromFlask];
     let filteredData = [...originalData];
-
-    let currentSort = {
-        column: null,
-        ascending: true
-    };
     
     const tbody = document.querySelector("#dataTable tbody");
     const yearFilter = document.getElementById("year");
+    const numPerPage = document.getElementById("num-per-page");
     const headers = document.querySelectorAll("#dataTable th");
+    const pageInfo = document.getElementById("pageInfo");
+    const prevButton = document.getElementById("prevPage");
+    const nextButton = document.getElementById("nextPage");
+
+    let currentFilter = {
+        column: null,
+        ascending: true,
+        numPerPage: parseInt(numPerPage.value, 10),
+        currentPage: 1
+    };
 
     function renderTable(data) {
         tbody.innerHTML = "";
 
-        data.forEach(row => {
+        const totalPages = Math.ceil(data.length / currentFilter.numPerPage) || 1;
+
+        if (currentFilter.currentPage > totalPages) {
+            currentFilter.currentPage = totalPages;
+        }
+        else if (currentFilter.currentPage < 1) {
+            currentFilter.currentPage = 1;
+        }
+
+        const start = (currentFilter.currentPage - 1) * currentFilter.numPerPage;
+        const end = start + currentFilter.numPerPage;
+
+        const pageData = data.slice(start, end);
+
+        pageData.forEach(row => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${row.id}</td>
@@ -24,6 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             tbody.appendChild(tr);
         });
+
+        pageInfo.textContent = `Page ${currentFilter.currentPage}`;
+        prevButton.disabled = currentFilter.currentPage === 1;
+        nextButton.disabled = currentFilter.currentPage === totalPages;
     }
 
     function updateSortArrows() {
@@ -33,8 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (!arrow) return;
 
-            if (column === currentSort.column) {
-                arrow.textContent = currentSort.ascending ? "↑" : "↓";
+            if (column === currentFilter.column) {
+                arrow.textContent = currentFilter.ascending ? "↑" : "↓";
             } else {
                 arrow.textContent = "";
             }
@@ -51,9 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
             return 0;
         });
 
-        currentSort = { column, ascending };
+        currentFilter.column = column;
+        currentFilter.ascending = ascending;
         updateSortArrows();
-        renderTable(filteredData);
+        return filteredData;
     }
 
     function applyFilter() {
@@ -65,11 +90,16 @@ document.addEventListener("DOMContentLoaded", () => {
             filteredData = originalData.filter(row => String(row.year) === selectedYear);
         }
 
-        if (currentSort.column) {
-            sortData(currentSort.column, currentSort.ascending);
-        } else {
-            renderTable(filteredData);
+        if (currentFilter.column) {
+            filteredData = sortData(currentFilter.column, currentFilter.ascending);
         }
+        renderTable(filteredData);
+    }
+
+    function setNumItemsPerPage() {
+        currentFilter.numPerPage = numPerPage.value;
+        currentFilter.currentPage = 1;
+        renderTable(filteredData);
     }
 
     headers.forEach(header => {
@@ -77,15 +107,32 @@ document.addEventListener("DOMContentLoaded", () => {
             const column = header.dataset.column;
             let ascending = true;
 
-            if (currentSort.column === column) {
-                ascending = !currentSort.ascending;
+            if (currentFilter.column === column) {
+                ascending = !currentFilter.ascending;
             }
 
-            sortData(column, ascending);
+            data = sortData(column, ascending);
+            renderTable(data);
         });
     });
 
+    prevButton.addEventListener("click", function () {
+        if (currentFilter.currentPage > 1) {
+            currentFilter.currentPage--;
+            renderTable(filteredData);
+        }
+    });
+
+    nextButton.addEventListener("click", function () {
+        const totalPages = Math.ceil(filteredData.length / currentFilter.numPerPage);
+        if (currentFilter.currentPage < totalPages) {
+            currentFilter.currentPage++;
+            renderTable(filteredData);
+        }
+    });
+
     yearFilter.addEventListener("change", applyFilter);
+    numPerPage.addEventListener("change", setNumItemsPerPage);
 
     renderTable(filteredData);
     updateSortArrows();

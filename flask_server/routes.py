@@ -17,7 +17,7 @@ from pathlib import Path
 
 from flask import Blueprint, request, abort, render_template, render_template_string, send_from_directory, g, url_for, current_app
 
-from .search import reset_index, index_all_data, query_index
+from .search import reset_index, index_all_data, query_index, query_index_paginated
 from .forms import SearchForm
 
 # Create blueprint for data routes
@@ -55,7 +55,7 @@ def list_data():
 @data_bp.route("/data")
 def list_data_indexed():
     index_name = current_app.config["INDEX_NAME"]
-    posts_per_page = int(current_app.config["POSTS_PER_PAGE"])
+    # posts_per_page = int(current_app.config["POSTS_PER_PAGE"])
     # Filter params
     # sort_col = request.args.get("sort", "id")
     # sort_order = request.args.get("order", "desc")
@@ -64,16 +64,17 @@ def list_data_indexed():
     # if sort_col not in ["id", "title", "author", "year"]:
         # sort_col = "year"
     # If the index doesn't already exist, create it
-    page = request.args.get('page', 1, type=int)
+    # page = request.args.get('page', 1, type=int)
     query = request.args.get('q', None, type=str)
     if not current_app.elasticsearch.indices.exists(index=index_name):
         reset_index(index_name)
     q = g.search_form.q.data if query else None
-    data, total = query_index(index_name, q, page, posts_per_page)
+    # data, total = query_index_paginated(index_name, q, page, posts_per_page)
+    data, total = query_index(index_name, q)
     # Search the folder and update the index to include all data
     index_all_data(base_dir / "data", index_name, [d['_id'] for d in data])
-    next_url = url_for('data.list_data_indexed', q=q, page=page + 1) if total > page * posts_per_page else None
-    prev_url = url_for('data.list_data_indexed', q=q, page=page - 1) if page > 1 else None
+    # next_url = url_for('data.list_data_indexed', q=q, page=page + 1) if total > page * posts_per_page else None
+    # prev_url = url_for('data.list_data_indexed', q=q, page=page - 1) if page > 1 else None
     # Filter by selected year
     all_years = sorted({row["_source"]["year"] for row in data}, reverse=True)
     # if selected_year:
@@ -86,7 +87,8 @@ def list_data_indexed():
     # reverse = sort_order == "desc"
     # data = sorted(data, key=lambda x: x[sort_col], reverse=reverse)
     # Call render_template and pass the list of all documents
-    return render_template("data.html", data=[row["_source"] for row in data], years=all_years, next_url=next_url, prev_url=prev_url)
+    return render_template("data.html", data=[row["_source"] for row in data], years=all_years)
+    # return render_template("data.html", data=[row["_source"] for row in data], years=all_years, next_url=next_url, prev_url=prev_url)
     # return render_template("data.html", data=data, years=all_years, sort_col=sort_col, sort_order=sort_order, selected_year=selected_year)
     # return render_template("data_ids.html", year=1970, data=[x["id"] for x in data])
 

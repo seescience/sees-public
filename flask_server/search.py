@@ -13,7 +13,16 @@ def add_to_index(index_name, id, year, file_path):
     return payload
 
 # Return all data ids that result from the given query
-def query_index(index, query, page, per_page):
+def query_index(index, query):
+    if not query:
+        search = current_app.elasticsearch.search(index=index, query={"match_all": {}}, size=2000)
+    else:
+        search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, size=2000)
+    hits = search['hits']['hits']
+    return hits, search['hits']['total']['value']
+
+# Return all data ids that result from the given query
+def query_index_paginated(index, query, page, per_page):
     if not query:
         search = current_app.elasticsearch.search(index=index, query={"match_all": {}}, from_=(page-1)*per_page, size=per_page)
     else:
