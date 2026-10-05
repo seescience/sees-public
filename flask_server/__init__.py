@@ -20,6 +20,7 @@ from elasticsearch import Elasticsearch
 
 from flask import Flask
 from flask_babel import Babel
+from flask_cors import CORS
 
 from flask_server.config import BaseConfig
 
@@ -52,6 +53,8 @@ def create_flask_app() -> Flask:
 
     # Import and register the routes
     from flask_server.routes import data_bp
+
+    CORS(app, origins=["http://localhost:5001"])
 
     app.register_blueprint(data_bp)
 

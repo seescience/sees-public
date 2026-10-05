@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageInfo = document.getElementById("pageInfo");
     const prevButton = document.getElementById("prevPage");
     const nextButton = document.getElementById("nextPage");
+    const searchInput = document.getElementById("searchInput")
 
     let currentFilter = {
         column: null,
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
         numPerPage: parseInt(numPerPage.value, 10),
         currentPage: 1
     };
+
+    let searchTimeout = null;
 
     function renderTable(data) {
         tbody.innerHTML = "";
@@ -130,6 +133,31 @@ document.addEventListener("DOMContentLoaded", () => {
             renderTable(filteredData);
         }
     });
+
+    // Listener for search input:
+    // Listen on input. Timeout of 300 ms calling function. The search function will send request to Flask.
+    // Flask will query the ES index and return JSON array of objects. JS will render the array into the table.
+    // If no input, revert to original data
+    searchInput.addEventListener("input", () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            performSearch(searchInput.value);
+        }, 300);
+    });
+
+    function performSearch(value) {
+        fetch("http://localhost:5001/search", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({text:value})
+        })
+        .then(response => response.json())
+        .then(data => {
+            renderTable(data);
+        })
+    }
 
     yearFilter.addEventListener("change", applyFilter);
     numPerPage.addEventListener("change", setNumItemsPerPage);

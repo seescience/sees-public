@@ -14,6 +14,7 @@
 
 #!/usr/bin/env python3
 from pathlib import Path
+import json
 
 from flask import Blueprint, request, abort, render_template, render_template_string, send_from_directory, g, url_for, current_app
 
@@ -92,10 +93,15 @@ def list_data_indexed():
     # return render_template("data.html", data=data, years=all_years, sort_col=sort_col, sort_order=sort_order, selected_year=selected_year)
     # return render_template("data_ids.html", year=1970, data=[x["id"] for x in data])
 
-# TODO: Create endpoint for getting search results from query
+# Endpoint for getting search results from query
 # For being called from JS
-# Read chapters on pagination and AJAX
-
+@data_bp.route("/search", methods=["POST"])
+def search():
+    index_name = current_app.config["INDEX_NAME"]
+    query = request.get_json()['text']
+    data, total = query_index(index_name, query)
+    data = sorted(data, key=lambda x: int(x["_score"]), reverse=True)
+    return json.dumps([row["_source"] for row in data])
 
 # List data filtered by a search
 # replaced this code with a request arg in the /data route
