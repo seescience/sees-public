@@ -7,7 +7,7 @@
 # This is the main entry point for the application. This file is used to configure
 # the Flask application.
 # ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas
+# Author: Christofanis Skordas, Alexander Nicolellis
 #
 # Copyright (C) 2025 GSECARS, The University of Chicago, USA
 # Copyright (C) 2025 NSF SEES, USA
@@ -19,8 +19,6 @@ from pathlib import Path
 from elasticsearch import Elasticsearch
 
 from flask import Flask
-from flask_babel import Babel
-from flask_cors import CORS
 
 from flask_server.config import BaseConfig
 
@@ -31,7 +29,6 @@ def create_flask_app() -> Flask:
     """Create and configure Flask application."""
     # Create the Flask app
     app = Flask(__name__)
-    babel = Babel(app)
     app.config.from_object(BaseConfig)
 
     app.elasticsearch = Elasticsearch([app.config["ELASTICSEARCH_URL"]], basic_auth=("elastic", "+dkb4eqdrI+A6=7MQlnr"), verify_certs=False)
@@ -53,8 +50,6 @@ def create_flask_app() -> Flask:
 
     # Import and register the routes
     from flask_server.routes import data_bp
-
-    CORS(app, origins=["http://localhost:5001"])
 
     app.register_blueprint(data_bp)
 

@@ -1,3 +1,4 @@
+// JavaScript for the data.html page
 document.addEventListener("DOMContentLoaded", () => {
     const originalData = [...dataFromFlask];
     let filteredData = [...originalData];
