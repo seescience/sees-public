@@ -77,7 +77,8 @@ def reset_index(index_name):
 
 # Traverse the data_path folder. Check if any folders are not already in the index.
 # Updates the elasticsearch index with any new data.
-def index_all_data(data_path, index_name, ids=None):
+# If the index changes, returns new data, including any query. Otherwise returns None
+def index_all_data(data_path, index_name, prev_ids=[], query=None):
     years = []
 
     if not data_path.exists():
@@ -85,11 +86,17 @@ def index_all_data(data_path, index_name, ids=None):
 
     years = [d.name for d in data_path.iterdir() if d.is_dir() and d.name.isdigit()]
 
-    prev_ids = get_all_indexed_ids(index_name)
+    ids = [x for x in prev_ids]
 
     for year in years:
         path = data_path / year
 
         for d in path.iterdir():
-            if d.is_dir() and (d / "index.html").exists() and d.name not in prev_ids and (d.name in ids or not ids):
+            if d.is_dir() and (d / "index.html").exists() and d.name not in prev_ids:
                 add_to_index(index_name, d.name, year, d / "index.html")
+                ids.append(d.name)
+
+    if len(ids) > len(prev_ids):
+        data, _ = query_index(index_name, query=query)
+        return data
+    return None

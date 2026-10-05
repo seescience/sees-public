@@ -44,8 +44,11 @@ def list_data_indexed():
         reset_index(index_name)
     # Get data to render from ElasticSearch filtered by the query
     data, _ = query_index(index_name, q)
+    ids = [d['_id'] for d in data]
     # Search the folder and update the index to include all data
-    index_all_data(base_dir / "data", index_name, [d['_id'] for d in data])
+    post = index_all_data(base_dir / "data", index_name, ids, q)
+    if post:
+        data = post   
     # Get all years present in the data
     all_years = sorted({row["_source"]["year"] for row in data}, reverse=True)
     # Sort data by search score if a query is used. Otherwise, sort by ID number
