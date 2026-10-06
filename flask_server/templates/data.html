@@ -2,29 +2,35 @@
 {% block content %}
 <div class="body">
     <div class="table-body">
-        <input type="search" id="searchInput" class="table-search-input"
-            placeholder="Search">
-        <label for="year">Filter by year:</label>
-        <select id="year">
-            <option value="all">All</option>
-            {% for year in years %}
-            <option value="{{ year }}">{{ year }}</option>
-            {% endfor %}
-        </select>
-        <button id="prevPage">
-            <span aria-hidden="true">&larr;</span> Previous page
-        </button>
-        <span id="pageInfo">Page 1</span>
-        <button id="nextPage">
-            Next page <span aria-hidden="true">&rarr;</span>
-        </button>
-        <label for="num-per-page">Items per page:</label>
-        <select id="num-per-page">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
+        <div class="table-toolbar">
+            <div class="toolbar-filters">
+                <input type="search" id="searchInput" class="table-search-input"
+                    placeholder="Search">
+                <label for="year" class="filterLabel">Filter by year:</label>
+                <select id="year" class="table-filter-select">
+                    <option value="all">All</option>
+                    {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="pagination-controls">
+                <label for="num-per-page" class="filterLabel">Items per page:</label>
+                <select id="num-per-page">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <button id="prevPage" class="pageBtn">
+                    <span aria-hidden="true">&larr;</span> Previous page
+                </button>
+                <span id="pageInfo">Page 1</span>
+                <button id="nextPage" class="pageBtn">
+                    Next page <span aria-hidden="true">&rarr;</span>
+                </button>
+            </div>
+        </div>
         <table class="dataTable" id="dataTable">
             <thead class="table-head">
                 <tr>
