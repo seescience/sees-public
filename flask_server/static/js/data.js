@@ -46,6 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td>${row.author}</td>
                 <td>${row.year}</td>
             `;
+            tr.addEventListener("click", function() {
+                window.location.href = `http://localhost:5001/data/${row.year}/${row.id}`;
+            });
             tbody.appendChild(tr);
         });
 

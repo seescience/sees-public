@@ -408,6 +408,11 @@ body {
   vertical-align: middle;
 }
 
+.dataTable tbody tr:hover {
+  cursor: pointer;
+  background-color: var(--focus-bg);
+}
+
 /* Toolbar container */
 .table-toolbar {
   display: flex;
