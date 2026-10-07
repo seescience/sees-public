@@ -38,6 +38,7 @@ dependencies = [
     "elasticsearch>=9.5.0",
     "flask>=3.1.1",
     "python-dotenv>=1.1.1",
+    "ty>=0.0.85",
 ]
 
 [project.urls]
