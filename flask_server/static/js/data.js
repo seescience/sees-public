@@ -66,8 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (column === currentFilter.column) {
                 arrow.textContent = currentFilter.ascending ? "↑" : "↓";
+                header.setAttribute("style", "border-bottom:4px solid var(--accent-primary);")
             } else {
                 arrow.textContent = "";
+                header.setAttribute("style", "border-bottom: 4px solid transparent");
             }
         });
     }
