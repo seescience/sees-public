@@ -32,7 +32,7 @@ def add_to_index(index_name, id, year, file_path):
 # If no query is given, returns all data from ElasticSearch
 # Also returns the number of hits
 def query_index(index, query):
-    if not query:
+    if query == "":
         search = current_app.elasticsearch.search(index=index, query={"match_all": {}}, size=2000)
     else:
         search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, size=2000)
@@ -78,7 +78,7 @@ def reset_index(index_name):
 # Traverse the data_path folder. Check if any folders are not already in the index.
 # Updates the elasticsearch index with any new data.
 # If the index changes, returns new data, including any query. Otherwise returns None
-def index_all_data(data_path, index_name, prev_ids=[], query=None):
+def index_all_data(data_path, index_name, prev_ids=[], query=""):
     years = []
 
     if not data_path.exists():
@@ -96,6 +96,7 @@ def index_all_data(data_path, index_name, prev_ids=[], query=None):
                 add_to_index(index_name, d.name, year, d / "index.html")
                 ids.append(d.name)
 
+    # If any new items got indexed, get the updated dataset
     if len(ids) > len(prev_ids):
         data, _ = query_index(index_name, query=query)
         return data

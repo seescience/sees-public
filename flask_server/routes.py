@@ -38,7 +38,7 @@ def list_data_indexed():
     index_name = current_app.config["INDEX_NAME"]
     # Get query from request params. 
     # This is currently not directly used, but allows users to manually search from the URL.
-    q = request.args.get('q', None, type=str)
+    q = request.args.get('q', "", type=str)
     # If the index doesn't already exist, create it
     if not current_app.elasticsearch.indices.exists(index=index_name):
         reset_index(index_name)
@@ -52,7 +52,7 @@ def list_data_indexed():
     # Get all years present in the data
     all_years = sorted({row["_source"]["year"] for row in data}, reverse=True)
     # Sort data by search score if a query is used. Otherwise, sort by ID number
-    if q:
+    if q != "":
         data = sorted(data, key=lambda x: int(x["_score"]), reverse=True)
     else:
         data = sorted(data, key=lambda x: int(x["_id"]), reverse=True)
@@ -66,7 +66,10 @@ def search():
     index_name = current_app.config["INDEX_NAME"]
     query = request.get_json()['text']
     data, total = query_index(index_name, query)
-    data = sorted(data, key=lambda x: int(x["_score"]), reverse=True)
+    if query != "":
+        data = sorted(data, key=lambda x: int(x["_score"]), reverse=True)
+    else:
+        data = sorted(data, key=lambda x: int(x["_id"]), reverse=True)
     return json.dumps([row["_source"] for row in data])
 
 # Directly render a specific file
