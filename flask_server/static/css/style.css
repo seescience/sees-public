@@ -5,7 +5,7 @@
  * Purpose:
  * Main stylesheet for the SEES Public Flask application.
  * ----------------------------------------------------------------------------------
- * Author: Christofanis Skordas
+ * Author: Christofanis Skordas, Alexander Nicolellis
  *
  * Copyright (C) 2025 GSECARS, The University of Chicago, USA
  * Copyright (C) 2025 NSF SEES, USA
@@ -45,6 +45,29 @@
     --hover-bg: rgba(13, 110, 253, 0.1);
     --focus-ring: rgba(13, 110, 253, 0.25);
     --focus-bg: #e9ecef;
+
+    --color-canvas:       #F7F8FA;
+    --color-surface:      #FFFFFF;
+    --color-border:       #E2E5EA;
+    --color-border-light: #EEF0F4;
+    
+    --color-text-primary:   #1A1D23;
+    --color-text-secondary: #5A6070;
+    --color-text-muted:     #9299A8;
+    
+    --color-accent:         #800000;
+    --color-accent-subtle:  #EEF2FF;
+    
+    --color-row-hover: #F3F6FF;
+    --color-row-alt:   #FAFBFC;
+
+    --color-hover: #f1f5f9;
+    
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-header: 0 1px 0 var(--color-border);
 }
 
 /* Base styles */
@@ -341,4 +364,164 @@ body {
         border-radius: 0 4px 4px 0;
     }
 
+}
+
+.table-body {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dataTable thead {
+  background: var(--color-canvas);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dataTable thead th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  border-bottom: 4px solid transparent;
+}
+
+.dataTable tbody tr {
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background 0.08s;
+}
+
+.dataTable td {
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+.dataTable tbody tr:hover {
+  cursor: pointer;
+  background-color: var(--focus-bg);
+}
+
+/* Toolbar container */
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+  background: var(--bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-card);
+}
+
+.toolbar-filters {
+    display:flex;
+    align-items: center;
+    gap:var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.filterLabel {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.table-search-input {
+    min-height: 40px;
+    padding: 0.625rem 0.75rem;
+    font-size: 12px;
+    color: var(--color-text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    min-width: 260px;
+}
+
+.table-filter-select {
+    min-height: 40px;
+    padding: 0.625rem 0.75rem;
+    font-size: var(--font-size-lg);
+    color: var(--color-text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    min-width: 70px;
+    cursor: pointer;
+}
+
+.toolbar-input:focus,
+.toolbar-select:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+}
+
+.toolbar-input::placeholder {
+  color: #9ca3af;
+}
+
+/* Pagination area */
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#pageInfo {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+.pageBtn {
+  min-height: 40px;
+  padding: 0.625rem 1rem;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--color-border-dark);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+}
+
+.pageBtn:hover {
+    background: var(--color-hover);
+    border-color: #94a3b8;
+}
+
+.pageBtn:active {
+    transform: translateY(1px);
+}
+
+.pageBtn:focus {
+    outline: none;
+    border-color: var(--color-border);
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+}
+
+.pageBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f8fafc;
 }

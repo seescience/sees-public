@@ -15,6 +15,7 @@
 
 import argparse
 import subprocess
+import urllib3
 
 from flask_server import create_flask_app
 
@@ -31,6 +32,7 @@ def main() -> None:
 
     # Run the Flask app
     if args.debug:
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         app.run(host="0.0.0.0", port=args.port if args.port else 5000, debug=True)
     else:
         subprocess.run(["gunicorn", "-c", "flask_server/config/gunicorn_config.py", "FlaskServer:app"], check=False)

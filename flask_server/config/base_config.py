@@ -30,3 +30,10 @@ class BaseConfig:
 
     # Logging configurationz
     FLASK_LOG_FILE = os.getenv("FLASK_LOG_FILE")
+
+    # Elasticsearch config
+    ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
+    INDEX_NAME = os.getenv("INDEX_NAME")
+
+    # Pagination
+    POSTS_PER_PAGE = os.getenv("POSTS_PER_PAGE")
