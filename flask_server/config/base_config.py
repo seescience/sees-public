@@ -1,16 +1,4 @@
-#!/usr/bin/env python3
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: flask_server/config/base_config.py
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This file is used to define the configuration settings for the Flask application.
-# ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas
-#
-# Copyright (C) 2025 GSECARS, The University of Chicago, USA
-# Copyright (C) 2025 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
 import os
 

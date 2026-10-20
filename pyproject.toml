@@ -1,15 +1,4 @@
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: pyproject.toml
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This file is used to specify the project configuration and dependencies.
-# ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas
-#
-# Copyright (C) 2025 GSECARS, The University of Chicago, USA
-# Copyright (C) 2025 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
 [project]
 name = "flask-server"
@@ -22,7 +11,8 @@ maintainers = [
 ]
 description = "SEES Public is a Flask application used to server static pages for DOIs, docs, software, etc., related to SEES"
 readme = {file = "README.md", content-type = "text/markdown"}
-license = {file = "LICENSE"}
+license = "MIT"
+license-files = ["LICENSE.txt"]
 classifiers = [
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
@@ -30,7 +20,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.13",
-    "License :: OSI Approved :: MIT License"
 ]
 requires-python = "==3.13.*"
 dependencies = [

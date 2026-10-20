@@ -1,17 +1,4 @@
-#!/usr/bin/env python3
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: flask_server/config/gunicorn_config.py
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This is the Gunicorn configuration file for the application. It sets the number
-# of workers, worker class, and other settings for the Gunicorn server.
-# ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas
-#
-# Copyright (C) 2025 GSECARS, The University of Chicago, USA
-# Copyright (C) 2025 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
 import os
 from pathlib import Path

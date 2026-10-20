@@ -1,17 +1,4 @@
-#!/usr/bin/env python3
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: FlaskServer.py
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This is the main entry point for the SEES Public flask server application. This
-# file is used to create the Flask app and run the gunicorn server.
-# ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas
-#
-# Copyright (C) 2025 GSECARS, The University of Chicago, USA
-# Copyright (C) 2025 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
 import argparse
 import subprocess

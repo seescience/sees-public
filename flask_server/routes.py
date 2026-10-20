@@ -1,16 +1,4 @@
-#!/usr/bin/env python3
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: flask_server/routes.py
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This file contains all the Flask routes for serving dynamic data content.
-# ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas, Alexander Nicolellis
-#
-# Copyright (C) 2025 GSECARS, The University of Chicago, USA
-# Copyright (C) 2025 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
 #!/usr/bin/env python3
 from pathlib import Path

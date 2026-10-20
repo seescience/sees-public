@@ -1,15 +1,4 @@
-/* ----------------------------------------------------------------------------------
- * Project: SEES Public
- * File: flask_server/static/css/style.css
- * ----------------------------------------------------------------------------------
- * Purpose:
- * Main stylesheet for the SEES Public Flask application.
- * ----------------------------------------------------------------------------------
- * Author: Christofanis Skordas, Alexander Nicolellis
- *
- * Copyright (C) 2025 GSECARS, The University of Chicago, USA
- * Copyright (C) 2025 NSF SEES, USA
- * ---------------------------------------------------------------------------------- */
+/* SPDX-License-Identifier: MIT */
 
 :root {
     /* Base font size */

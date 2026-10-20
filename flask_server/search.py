@@ -1,16 +1,4 @@
-#!/usr/bin/env python3
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: flask_server/search.py
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This file contains utility functions related to ElasticSearch.
-# ----------------------------------------------------------------------------------
-# Author: Alexander Nicolellis
-#
-# Copyright (C) 2026 GSECARS, The University of Chicago, USA
-# Copyright (C) 2026 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
 from flask import current_app
 from bs4 import BeautifulSoup

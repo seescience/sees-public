@@ -35,4 +35,4 @@ By contributing to the SEES Public project, you agree that your contributions wi
 ---
 ## License
 
-SEES Public is distributed under the MIT License. You should have received a [copy](LICENSE) of the MIT License along with this program. If not, see https://mit-license.org/ for additional details.
+SEES Public is distributed under the MIT License. You should have received a [copy](LICENSE.txt) of the MIT License along with this program. If not, see https://mit-license.org/ for additional details.
