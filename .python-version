@@ -1,14 +1,4 @@
-# ----------------------------------------------------------------------------------
-# Project: SEES Public
-# File: .python-version
-# ----------------------------------------------------------------------------------
-# Purpose:
-# This file is used to keep track of the python version of the project.
-# ----------------------------------------------------------------------------------
-# Author: Christofanis Skordas
-#
-# Copyright (C) 2025 GSECARS, The University of Chicago, USA
-# Copyright (C) 2025 NSF SEES, USA
-# ----------------------------------------------------------------------------------
+# SPDX-License-Identifier: MIT
 
-3.13
+3.14
+

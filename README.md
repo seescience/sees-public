@@ -1,6 +1,6 @@
 # SEES Public
 
-![License](https://img.shields.io/badge/License-MIT-teal.svg) ![Python](https://img.shields.io/badge/Python-3.13-22558a.svg?logo=python&color=22558a) ![Flask](https://img.shields.io/badge/Flask-v3.1.0-3b9388.svg?logo=fastapi&color=3b9388)
+![License](https://img.shields.io/badge/License-MIT-teal.svg) ![Python](https://img.shields.io/badge/Python-3.14-22558a.svg?logo=python&color=22558a) ![Flask](https://img.shields.io/badge/Flask-v3.1.0-3b9388.svg?logo=fastapi&color=3b9388)
 
 SEES Public is a Flask application used to server static pages for DOIs, docs, software, etc. related to SEES.
 
