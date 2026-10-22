@@ -11,16 +11,14 @@ load_dotenv()
 class BaseConfig:
     """Application configuration class."""
 
-    # Basic Flask config
+    # Flask config
     SECRET_KEY = os.getenv("SECRET_KEY")
-    DEBUG = os.getenv("DEBUG").lower() == "true"
-    TESTING = os.getenv("TESTING").lower() == "true"
-
-    # Logging configurationz
     FLASK_LOG_FILE = os.getenv("FLASK_LOG_FILE")
 
     # Elasticsearch config
-    ELASTICSEARCH_URL = os.getenv("ELASTICSEARCH_URL")
+    ELASTIC_URL = os.getenv("ELASTIC_URL")
+    ELASTIC_USERNAME = os.getenv("ELASTIC_USERNAME")
+    ELASTIC_PASSWORD = os.getenv("ELASTIC_PASSWORD")
     INDEX_NAME = os.getenv("INDEX_NAME")
 
     # Pagination

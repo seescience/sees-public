@@ -1,46 +1,29 @@
 # SPDX-License-Identifier: MIT
 
-import logging
-from logging.handlers import RotatingFileHandler
-from pathlib import Path
-from elasticsearch import Elasticsearch
+from argparse import ArgumentParser
+from importlib.metadata import version
 
-from flask import Flask
+from sees_public.sees_app import SEESApp
 
-from sees_public.config import BaseConfig
-
+__version__ = version("sees_public")
 __all__ = ["create_flask_app"]
 
 
-def create_flask_app() -> Flask:
-    """Create and configure Flask application."""
-    # Create the Flask app
-    app = Flask(__name__)
-    app.config.from_object(BaseConfig)
+def main() -> None:
+    parser = ArgumentParser(f"SEES Public {__version__}")
+    subparsers = parser.add_subparsers(dest="mode", metavar="mode")
 
-    app.elasticsearch = Elasticsearch([app.config["ELASTICSEARCH_URL"]], basic_auth=("elastic", "+dkb4eqdrI+A6=7MQlnr"), verify_certs=False)
+    # dev subcommand
+    dev = subparsers.add_parser("dev", help="dev operations")
+    dev.add_argument("-p", "--port", type=int, default=5001, help="port to run the development server on (default 5001)")
 
-    # Setup logging
-    if not app.debug and not app.testing:
-        # Create directory for Flask log file if needed
-        flask_log_path = Path(app.config["FLASK_LOG_FILE"])
-        flask_log_path.parent.mkdir(parents=True, exist_ok=True)
+    args = parser.parse_args()
 
-        # Setup file handler
-        file_handler = RotatingFileHandler(app.config["FLASK_LOG_FILE"], maxBytes=10240000, backupCount=10)
-        file_handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
-
-        app.logger.setLevel(logging.INFO)
-        app.logger.info("SEES Public application startup")
-
-    # Import and register the routes
-    from sees_public.routes import data_bp
-
-    app.register_blueprint(data_bp)
-
-    # Log startup info
-    app.logger.info("SEES Public app started")
-
-    return app
+    if args.mode == "dev":
+        SEESApp(dev_mode=True).run_dev(port=args.port)
+    else:
+        SEESApp(
+            {
+                "config": "sees_public/config/gunicorn_config.py",
+            }
+        ).run()
