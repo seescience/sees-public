@@ -7,7 +7,7 @@ from elasticsearch import Elasticsearch
 
 from flask import Flask
 
-from flask_server.config import BaseConfig
+from sees_public.config import BaseConfig
 
 __all__ = ["create_flask_app"]
 
@@ -36,7 +36,7 @@ def create_flask_app() -> Flask:
         app.logger.info("SEES Public application startup")
 
     # Import and register the routes
-    from flask_server.routes import data_bp
+    from sees_public.routes import data_bp
 
     app.register_blueprint(data_bp)
 

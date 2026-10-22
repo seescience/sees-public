@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
 
-from flask_server.config.base_config import BaseConfig
+from sees_public.config.base_config import BaseConfig
 
 __all__ = ["BaseConfig"]
