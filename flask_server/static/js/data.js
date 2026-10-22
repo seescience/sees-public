@@ -1,4 +1,5 @@
-// JavaScript for the data.html page
+// SPDX-License-Identifier: MIT
+
 document.addEventListener("DOMContentLoaded", () => {
     const originalData = [...dataFromFlask];
     let filteredData = [...originalData];

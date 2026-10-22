@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 
-#!/usr/bin/env python3
 from pathlib import Path
 import json
 

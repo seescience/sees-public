@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 repos:
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
