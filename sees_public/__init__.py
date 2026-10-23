@@ -22,8 +22,4 @@ def main() -> None:
     if args.mode == "dev":
         SEESApp(dev_mode=True).run_dev(port=args.port)
     else:
-        SEESApp(
-            {
-                "config": "sees_public/config/gunicorn_config.py",
-            }
-        ).run()
+        SEESApp(options={"config": "sees_public/config/gunicorn_config.py"}).run()
