@@ -75,4 +75,4 @@ class SEESApp(BaseApplication):
 
     def run_dev(self, port: int) -> None:
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        self.application.run(host="0.0.0.0", port=port, debug=True)
+        self.application.run(host="127.0.0.1", port=port, debug=True)
