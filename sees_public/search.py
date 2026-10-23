@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: MIT
 
-from flask import current_app
 from bs4 import BeautifulSoup
 from elasticsearch import helpers
+
+from sees_public.elastic import get_elastic
 
 
 # Constructs a document containing the data of the ESAF found at the specified file path
@@ -11,10 +12,11 @@ from elasticsearch import helpers
 # Returns the payload
 def add_to_index(index_name, id, year, file_path):
     # Parse index.html file into payload
+    elastic = get_elastic()
     payload = parse_data_from_html(file_path)
     payload["id"] = id
     payload["year"] = year
-    current_app.elasticsearch.index(index=index_name, id=id, document=payload)
+    elastic.index(index=index_name, id=id, document=payload)
     return payload
 
 
@@ -22,10 +24,11 @@ def add_to_index(index_name, id, year, file_path):
 # If no query is given, returns all data from ElasticSearch
 # Also returns the number of hits
 def query_index(index, query):
+    elastic = get_elastic()
     if query == "":
-        search = current_app.elasticsearch.search(index=index, query={"match_all": {}}, size=2000)
+        search = elastic.search(index=index, query={"match_all": {}}, size=2000)
     else:
-        search = current_app.elasticsearch.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, size=2000)
+        search = elastic.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, size=2000)
     hits = search["hits"]["hits"]
     return hits, search["hits"]["total"]["value"]
 
@@ -33,12 +36,11 @@ def query_index(index, query):
 # Return all data ids that result from the given query
 # Returns all ids if no query is given
 def query_index_paginated(index, query, page, per_page):
+    elastic = get_elastic()
     if not query:
-        search = current_app.elasticsearch.search(index=index, query={"match_all": {}}, from_=(page - 1) * per_page, size=per_page)
+        search = elastic.search(index=index, query={"match_all": {}}, from_=(page - 1) * per_page, size=per_page)
     else:
-        search = current_app.elasticsearch.search(
-            index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, from_=(page - 1) * per_page, size=per_page
-        )
+        search = elastic.search(index=index, query={"multi_match": {"query": query, "fields": ["*"]}}, from_=(page - 1) * per_page, size=per_page)
     hits = search["hits"]["hits"]
     return hits, search["hits"]["total"]["value"]
 
@@ -56,21 +58,24 @@ def parse_data_from_html(file_path):
 
 # Returns a list of ID numbers for all data in the index
 def get_all_indexed_ids(index_name):
-    hits = helpers.scan(current_app.elasticsearch, query={"query": {"match_all": {}}}, index=index_name)
+    elastic = get_elastic()
+    hits = helpers.scan(elastic, query={"query": {"match_all": {}}}, index=index_name)
     return [hit["_id"] for hit in hits]
 
 
 # Retrieve all indexed documents
 def get_all_docs(index_name):
-    hits = helpers.scan(current_app.elasticsearch, query={"query": {"match_all": {}}}, index=index_name)
+    elastic = get_elastic()
+    hits = helpers.scan(elastic, query={"query": {"match_all": {}}}, index=index_name)
     return [hit["_source"] for hit in hits]
 
 
 # Reinstantiate the elasticsearch index with the given name
 def reset_index(index_name):
+    elastic = get_elastic()
     # Delete without giving an error if the index doesn't exist
-    current_app.elasticsearch.indices.delete(index=index_name, ignore_unavailable=True)
-    current_app.elasticsearch.indices.create(index=index_name)
+    elastic.indices.delete(index=index_name, ignore_unavailable=True)
+    elastic.indices.create(index=index_name)
 
 
 # Traverse the data_path folder. Check if any folders are not already in the index.

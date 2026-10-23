@@ -5,11 +5,11 @@ import urllib3
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-from elasticsearch import Elasticsearch
 from flask import Flask
 from gunicorn.app.base import BaseApplication
 
 from sees_public.config import BaseConfig
+from sees_public.elastic import init_elastic
 from sees_public.routes import data_bp
 
 
@@ -26,14 +26,7 @@ class SEESApp(BaseApplication):
         # flask application
         self.application = Flask(__name__)
         self.application.config.from_object(BaseConfig)
-        self.application.elasticsearch = Elasticsearch(
-            [self.application.config["ELASTIC_URL"]],
-            basic_auth=(
-                self.application.config["ELASTIC_USERNAME"],
-                self.application.config["ELASTIC_PASSWORD"],
-            ),
-            verify_certs=False,
-        )
+        init_elastic(app=self.application)
 
         # configure logging
         if not dev_mode:

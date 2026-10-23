@@ -6,6 +6,8 @@ import json
 from flask import Blueprint, request, abort, render_template, render_template_string, current_app
 
 from .search import reset_index, index_all_data, query_index
+from sees_public.elastic import get_elastic
+
 
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
@@ -29,7 +31,8 @@ def list_data_indexed():
     # This is currently not directly used, but allows users to manually search from the URL.
     q = request.args.get("q", "", type=str)
     # If the index doesn't already exist, create it
-    if not current_app.elasticsearch.indices.exists(index=index_name):
+    elastic = get_elastic()
+    if not elastic.indices.exists(index=index_name):
         reset_index(index_name)
     # Get data to render from ElasticSearch filtered by the query
     data, _ = query_index(index_name, q)
