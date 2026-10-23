@@ -69,7 +69,8 @@ class SEESApp(BaseApplication):
             if value is not None and key in self.cfg.settings:
                 self.cfg.set(key.lower(), value)
 
-    def load(self) -> Flask:
+    def load(self):
+        """Returns WSGI/ASGI application."""
         return self.application
 
     def run_dev(self, port: int) -> None:
