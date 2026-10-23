@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # SPDX-License-Identifier: MIT
 
-uv run FlaskServer.py & > /dev/null 2>&1
+uv run sees-public & > /dev/null 2>&1
