@@ -6,7 +6,7 @@ from importlib.metadata import version
 from sees_public.sees_app import SEESApp
 
 __version__ = version("sees_public")
-__all__ = ["create_flask_app"]
+__all__ = ["main"]
 
 
 def main() -> None:
