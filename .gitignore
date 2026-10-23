@@ -29,15 +29,6 @@ Desktop.ini
 # Tools
 *.mypy_cache/
 
-# Logs
-logs/
-
 # Sensitive data
+logs/
 .env
-data/
-Docs/
-Software/
-Facilities/
-Publications/
-TownHall2024/
-XASLIB_2024/

@@ -15,6 +15,6 @@ repos:
       - id: ruff-check
         types_or: [ python, pyi ]
         args: [ --fix ]
-      # Run the formatter: deliberately disabled.
+      # Run the formatter
       - id: ruff-format
         types_or: [ python, pyi ]
