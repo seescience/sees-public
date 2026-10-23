@@ -26,6 +26,13 @@ class SEESApp(BaseApplication):
         # flask application
         self.application = Flask(__name__)
         self.application.config.from_object(BaseConfig)
+
+        # check for required variables
+        missing = [key for key in BaseConfig.REQUIRED if not self.application.config.get(key)]
+        if missing:
+            raise RuntimeError(f"Missing required settings: {', '.join(missing)}")
+
+        # init elastic search client
         init_elastic(app=self.application)
 
         # configure logging

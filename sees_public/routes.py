@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT
 
-from pathlib import Path
 import json
 
 from flask import Blueprint, request, abort, render_template, render_template_string, current_app
@@ -11,9 +10,6 @@ from sees_public.elastic import get_elastic
 
 # Create blueprint for data routes
 data_bp = Blueprint("data", __name__)
-
-# Base directory (Archives)
-base_dir = Path("/Volumes/public")
 
 
 # Home route
@@ -38,7 +34,7 @@ def list_data_indexed():
     data, _ = query_index(index_name, q)
     ids = [d["_id"] for d in data]
     # Search the folder and update the index to include all data
-    post = index_all_data(base_dir / "data", index_name, ids, q)
+    post = index_all_data(current_app.config["DATA_DIR"], index_name, ids, q)
     if post:
         data = post
     # Get all years present in the data
@@ -71,7 +67,7 @@ def search():
 @data_bp.route("/data/<year>/<id>/")
 def serve_data(year, id):
     """Render index.html from data/year/id/ directory as a template."""
-    data_path = base_dir / "data" / year / id
+    data_path = current_app.config["DATA_DIR"] / year / id
     index_file = data_path / "index.html"
 
     if index_file.exists():
