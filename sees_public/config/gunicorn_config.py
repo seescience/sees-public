@@ -9,10 +9,10 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration options
-bind = os.getenv("GUNICORN_BIND")
-workers = int(os.getenv("GUNICORN_WORKERS"))
-timeout = int(os.getenv("GUNICORN_TIMEOUT"))
-graceful_timeout = int(os.getenv("GUNICORN_GRACEFUL_TIMEOUT"))
+bind = os.getenv("GUNICORN_BIND", "0.0.0.0:5001")
+workers = int(os.getenv("GUNICORN_WORKERS", "4"))
+timeout = int(os.getenv("GUNICORN_TIMEOUT", "60"))
+graceful_timeout = int(os.getenv("GUNICORN_GRACEFUL_TIMEOUT", "30"))
 accesslog = os.getenv("GUNICORN_ACCESS_LOG")
 errorlog = os.getenv("GUNICORN_ERROR_LOG")
 
